@@ -8,12 +8,8 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
-    include: ['**/*.e2e-spec.ts'],
     globals: true,
     root: './',
-    globalSetup: ['test/globals/setup-pg-test-containers.ts'],
-    setupFiles: ['ts-node/register/transpile-only'],
-    hookTimeout: 1000 * 60 * 5,
   },
   plugins: [
     swc.vite({

@@ -18,7 +18,7 @@ export async function setup() {
     .withDatabase(POSTGRES_DB)
     .withPassword(POSTGRES_PASSWORD)
     .withUsername(POSTGRES_USER)
-    .withName('test_postgres')
+    .withName('postgres_test')
     .withReuse()
     .withHealthCheck({
       test: ['CMD-SHELL', `pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}`],

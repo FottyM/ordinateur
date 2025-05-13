@@ -17,7 +17,8 @@
     "test:watch": "vitest",
     "test:cov": "vitest run --coverage",
     "test:debug": "vitest --inspect-brk --inspect --logHeapUsage --threads=false",
-    "test:e2e": "vitest run --config ./vitest.config.e2e.ts",
+    "test:e2e": "vitest run --config ./vitest-e2e.config.ts",
+    "test:unit": "vitest run --config ./vitest-unit.config.ts",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "migration:generate": "npm run typeorm -- --dataSource src/database/data-source.ts migration:generate",
     "migration:create": "npm run typeorm -- migration:create",
@@ -53,6 +54,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.18.0",
+    "@faker-js/faker": "^9.7.0",
     "@nestjs/cli": "^11.0.0",
     "@nestjs/schematics": "^11.0.0",
     "@nestjs/testing": "^11.0.1",

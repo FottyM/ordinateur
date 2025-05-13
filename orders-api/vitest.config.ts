@@ -8,23 +8,15 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
+    include: ['**/*.e2e-spec.ts', '**/*.spec.ts'],
     globals: true,
     root: './',
-    environment: 'node',
-    globalSetup: [
-      'test/globals/setup-pg-test-containers.ts',
-      'test/globals/setup-redis-test-container.ts',
-    ],
-    setupFiles: [
-      // Added this because type orm models throw error without
-      'ts-node/register/transpile-only',
-    ],
+    globalSetup: ['test/globals/setup-pg-test-containers.ts'],
+    setupFiles: ['ts-node/register/transpile-only'],
     hookTimeout: 1000 * 60 * 5,
   },
   plugins: [
-    // This is required to build the test files with SWC
     swc.vite({
-      // Explicitly set the module type to avoid inheriting this value from a `.swcrc` config file
       module: { type: 'es6' },
     }),
   ],

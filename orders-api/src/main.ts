@@ -5,8 +5,8 @@ import { AppModule } from './http-server/app.module';
 import { ConfigService } from '@nestjs/config';
 import { AppConfig, CombinedConfigs } from './configs/configs.types';
 import helmet from 'helmet';
-import { PostgresErrorFilter } from './utils/filters/postgres-error/postgres-error.filter';
-import { ValidationPipe } from '@nestjs/common';
+
+import { useCommonFiltersAndPipes } from './http-server/use-common-filters-and-pipes';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -26,15 +26,7 @@ async function bootstrap() {
 
   app.useLogger(logger);
 
-  app.useGlobalFilters(new PostgresErrorFilter());
-
-  app.useGlobalPipes(
-    new ValidationPipe({
-      transform: true,
-      whitelist: true,
-      forbidNonWhitelisted: true,
-    }),
-  );
+  useCommonFiltersAndPipes(app);
 
   await app.listen(port);
 
