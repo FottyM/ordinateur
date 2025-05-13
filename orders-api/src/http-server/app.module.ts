@@ -2,16 +2,15 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import dbConfigs from '@/configs/db.configs';
 import appConfigs from '@/configs/app.configs';
-import {
-  CombinedConfigs,
-  DatabaseConfig,
-} from '@/configs/configs.types';
+import { CombinedConfigs, DatabaseConfig } from '@/configs/configs.types';
 import { LoggerModule } from 'nestjs-pino';
 import loggerConfigs from '@/configs/logger.configs';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { OrdersModule } from '@/modules/orders/orders.module';
 
 @Module({
   imports: [
+    OrdersModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [dbConfigs, appConfigs, loggerConfigs],

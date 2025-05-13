@@ -37,7 +37,7 @@ describe('PostgresErrorFilterFilter', () => {
       'query',
       [],
       mock<DatabaseError>({
-        code: CommPgErrors.Unique_Violation,
+        code: CommPgErrors.UniquenessViolation,
       }),
     );
     filter.catch(exception, mockHost);
@@ -53,7 +53,7 @@ describe('PostgresErrorFilterFilter', () => {
       'query',
       [],
       mock<DatabaseError>({
-        code: CommPgErrors.Numeric_Value_Out_of_Range,
+        code: CommPgErrors.NumericValueOutOfRange,
       }),
     );
     filter.catch(exception, mockHost);
@@ -69,7 +69,7 @@ describe('PostgresErrorFilterFilter', () => {
       'query',
       [],
       mock<DatabaseError>({
-        code: CommPgErrors.Foreign_Key_Violation,
+        code: CommPgErrors.ForeignKeyViolation,
       }),
     );
     filter.catch(exception, mockHost);
@@ -85,7 +85,7 @@ describe('PostgresErrorFilterFilter', () => {
       'query',
       [],
       mock<DatabaseError>({
-        code: CommPgErrors.String_Data_Length_Violation,
+        code: CommPgErrors.StringDataLengthViolation,
       }),
     );
     filter.catch(exception, mockHost);
@@ -101,7 +101,7 @@ describe('PostgresErrorFilterFilter', () => {
       'query',
       [],
       mock<DatabaseError>({
-        code: CommPgErrors.Undefined_Column,
+        code: CommPgErrors.UndefinedColumn,
       }),
     );
     filter.catch(exception, mockHost);

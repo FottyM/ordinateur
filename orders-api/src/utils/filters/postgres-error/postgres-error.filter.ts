@@ -10,31 +10,37 @@ export class PostgresErrorFilter implements ExceptionFilter {
     const response = host.switchToHttp().getResponse<Response>();
 
     switch (exception.driverError.code) {
-      case CommPgErrors.Unique_Violation:
+      case CommPgErrors.UniquenessViolation:
         response.status(409).json({
           statusCode: 409,
           message: 'Conflict: Resource already exists',
         });
         break;
-      case CommPgErrors.Numeric_Value_Out_of_Range:
+      case CommPgErrors.NumericValueOutOfRange:
         response.status(422).json({
           statusCode: 422,
           message: 'Unprocessable Entity: Numeric value is out of range',
         });
         break;
-      case CommPgErrors.Foreign_Key_Violation:
+      case CommPgErrors.InvalidDateTime:
+        response.status(422).json({
+          statusCode: 422,
+          message: 'Invalid datetime value',
+        });
+        break;
+      case CommPgErrors.ForeignKeyViolation:
         response.status(400).json({
           statusCode: 400,
           message: 'Bad Request: Foreign key violation',
         });
         break;
-      case CommPgErrors.String_Data_Length_Violation:
+      case CommPgErrors.StringDataLengthViolation:
         response.status(400).json({
           statusCode: 400,
           message: 'Bad Request: String value exceeds field size',
         });
         break;
-      case CommPgErrors.Undefined_Column:
+      case CommPgErrors.UndefinedColumn:
         response.status(400).json({
           statusCode: 400,
           message: 'Bad Request: Undefined column',

@@ -6,6 +6,7 @@ import { ConfigService } from '@nestjs/config';
 import { AppConfig, CombinedConfigs } from './configs/configs.types';
 import helmet from 'helmet';
 import { PostgresErrorFilter } from './utils/filters/postgres-error/postgres-error.filter';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -24,7 +25,16 @@ async function bootstrap() {
   const { appPort: port } = config.getOrThrow<AppConfig>('app');
 
   app.useLogger(logger);
+
   app.useGlobalFilters(new PostgresErrorFilter());
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    }),
+  );
 
   await app.listen(port);
 
