@@ -1,0 +1,18 @@
+# Ignore everything
+**
+
+# Allow only necessary files
+!src/
+!.env
+!.nvmrc
+!nest-cli.json
+!package-lock.json
+!package.json
+!tsconfig.build.json
+!tsconfig.json
+!test/jest-extended.d.ts
+
+## Ignore after build
+
+node_modules/
+dist/
