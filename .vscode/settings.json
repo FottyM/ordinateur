@@ -1,0 +1,40 @@
+{
+  "cSpell.words": [
+    "allkeys",
+    "appendonly",
+    "BOOTSTRAPSERVERS",
+    "bullmq",
+    "confluentinc",
+    "dbname",
+    "debezium",
+    "healthcheck",
+    "ILIKE",
+    "isready",
+    "KAFKACONNECT",
+    "KAFKASTORE",
+    "LOGLEVEL",
+    "masterauth",
+    "Metadatas",
+    "mymaster",
+    "pgoutput",
+    "requirepass",
+    "SCHEMAREGISTRY",
+    "slaveof",
+    "sqlstring",
+    "swcrc",
+    "teardown",
+    "unplugin",
+    "Vars"
+  ],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}

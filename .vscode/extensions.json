@@ -1,0 +1,18 @@
+{
+  "recommendations": [
+    "vitest.explorer",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "hbenl.vscode-test-explorer",
+    "ms-vscode.test-adapter-converter",
+    "yoavbls.pretty-ts-errors",
+    "usernamehw.errorlens",
+    "mikestead.dotenv",
+    "docker.docker",
+    "streetsidesoftware.code-spell-checker",
+    "streetsidesoftware.code-spell-checker-british-english",
+    "aaron-bond.better-comments",
+    "angular.ng-template",
+    "humao.rest-client"
+  ]
+}
