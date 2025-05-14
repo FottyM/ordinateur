@@ -11,6 +11,7 @@ import {
 @Entity({ name: 'orders' })
 export class Order {
   @PrimaryGeneratedColumn('uuid', { primaryKeyConstraintName: 'pk_orders' })
+  @Exclude({ toPlainOnly: true })
   id: string;
 
   @Column({ name: 'public_id', type: 'text' })
