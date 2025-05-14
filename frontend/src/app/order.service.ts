@@ -46,4 +46,8 @@ export class OrderService {
   createOrder(order: CreateOrderDto) {
     return this.http.post(this.apiUrl, order);
   }
+
+  existsOrderNumber(orderNumber: string) {
+    return this.http.get<boolean>(`${this.apiUrl}/${orderNumber}/exists`);
+  }
 }

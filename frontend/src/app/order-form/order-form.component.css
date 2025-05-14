@@ -20,3 +20,7 @@
 mat-card {
   padding: 2rem;
 }
+
+.form-field-spacing {
+  margin-bottom: 2em;
+}

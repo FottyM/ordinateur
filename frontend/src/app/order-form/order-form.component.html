@@ -2,7 +2,7 @@
   <mat-card>
     <form [formGroup]="orderForm" (ngSubmit)="submit()">
       <div class="form-row">
-        <mat-form-field appearance="outline" class="half">
+        <mat-form-field appearance="outline" class="half form-field-spacing">
           <mat-label>Order Number</mat-label>
           <input matInput formControlName="orderNumber" />
           <button
@@ -14,9 +14,14 @@
           >
             <mat-icon>close</mat-icon>
           </button>
+          <mat-error
+            *ngIf="orderForm.get('orderNumber')?.hasError('orderNumberExists')"
+          >
+            Order number already exists. Please enter a unique order number.
+          </mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="half">
+        <mat-form-field appearance="outline" class="half form-field-spacing">
           <mat-label>Payment Due Date</mat-label>
           <input
             matInput
@@ -49,9 +54,15 @@
       </div>
 
       <div class="form-row">
-        <mat-form-field appearance="outline" class="half">
+        <mat-form-field appearance="outline" class="half form-field-spacing">
           <mat-label>Amount (e.g. 1,999.99)</mat-label>
-          <input matInput formControlName="amount" />
+          <input
+            matInput
+            type="number"
+            min="0.01"
+            step="0.01"
+            formControlName="amount"
+          />
           <button
             *ngIf="orderForm.get('amount')?.value"
             mat-icon-button
@@ -61,9 +72,15 @@
           >
             <mat-icon>close</mat-icon>
           </button>
+          <mat-error *ngIf="orderForm.get('amount')?.hasError('min')">
+            Amount must be a positive number.
+          </mat-error>
+          <mat-error *ngIf="orderForm.get('amount')?.hasError('required')">
+            Amount is required.
+          </mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="half">
+        <mat-form-field appearance="outline" class="half form-field-spacing">
           <mat-label>Currency</mat-label>
           <input
             type="text"
@@ -95,7 +112,7 @@
       </div>
 
       <div class="form-row">
-        <mat-form-field appearance="outline" class="half">
+        <mat-form-field appearance="outline" class="half form-field-spacing">
           <mat-label>Street Address</mat-label>
           <input matInput formControlName="streetAddress" />
           <button
@@ -109,7 +126,7 @@
           </button>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="half">
+        <mat-form-field appearance="outline" class="half form-field-spacing">
           <mat-label>Town</mat-label>
           <input matInput formControlName="town" />
           <button
@@ -125,7 +142,7 @@
       </div>
 
       <div class="form-row">
-        <mat-form-field appearance="outline" class="half">
+        <mat-form-field appearance="outline" class="half form-field-spacing">
           <mat-label>Country</mat-label>
           <input
             type="text"
@@ -157,7 +174,7 @@
       </div>
 
       <div class="form-row">
-        <mat-form-field appearance="outline" class="full">
+        <mat-form-field appearance="outline" class="full form-field-spacing">
           <mat-label>Payment Description</mat-label>
           <textarea
             matInput

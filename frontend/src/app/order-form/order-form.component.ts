@@ -22,10 +22,17 @@ import enLocations from 'i18n-iso-countries/langs/en.json';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { Observable, startWith, map } from 'rxjs';
+import { Observable, startWith, map, of } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { OrderService } from '../order.service';
 import { CreateOrderDto } from '../order';
+import {
+  debounceTime,
+  switchMap,
+  map as rxMap,
+  catchError,
+  distinctUntilChanged,
+} from 'rxjs/operators';
 
 countries.registerLocale(enLocations);
 
@@ -79,7 +86,14 @@ export class OrderFormComponent implements OnInit {
     }));
 
     this.orderForm = this.fb.group({
-      orderNumber: ['', Validators.required],
+      orderNumber: [
+        '',
+        {
+          validators: [Validators.required],
+          asyncValidators: [this.orderNumberExistsValidator.bind(this)],
+          updateOn: 'blur',
+        },
+      ],
       paymentDueDate: [
         '',
         [
@@ -189,5 +203,23 @@ export class OrderFormComponent implements OnInit {
         );
       },
     });
+  }
+
+  orderNumberExistsValidator(
+    control: AbstractControl
+  ): Observable<{ orderNumberExists: boolean } | null> {
+    if (!control.value) {
+      return of(null);
+    }
+    return of(control.value).pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap((orderNumber) =>
+        this.orderService.existsOrderNumber(orderNumber).pipe(
+          rxMap((exists) => (exists ? { orderNumberExists: true } : null)),
+          catchError(() => of(null))
+        )
+      )
+    );
   }
 }
