@@ -16,3 +16,8 @@
 ::ng-deep .mat-mdc-paginator-touch-target {
   pointer-events: none !important;
 }
+
+.new-order-highlight {
+  background-color: #fff9c4 !important;
+  transition: background-color 1s;
+}

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -21,6 +21,8 @@ import { Observable, startWith, map } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ActivatedRoute } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-order-list',
@@ -44,7 +46,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   templateUrl: './order-list.component.html',
   styleUrl: './order-list.component.css',
 })
-export class OrderListComponent implements OnInit, AfterViewInit {
+export class OrderListComponent implements OnInit {
   displayedColumns: Array<keyof Order> = [
     'orderNumber',
     'amount',
@@ -65,6 +67,7 @@ export class OrderListComponent implements OnInit, AfterViewInit {
   totalOrders = 0;
   isLoading = false;
   allLoaded = false;
+  highlightedOrderNumber: string | null = null;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -73,7 +76,11 @@ export class OrderListComponent implements OnInit, AfterViewInit {
   countryCtrl = new FormControl('');
   filteredCountries!: Observable<{ code: string; name: string }[]>;
 
-  constructor(private readonly orderService: OrderService) {
+  constructor(
+    private readonly orderService: OrderService,
+    private route: ActivatedRoute,
+    private snackBar: MatSnackBar
+  ) {
     this.filterChanged$.pipe(debounceTime(300)).subscribe(() => {
       this.pageIndex = 0;
       if (this.paginator) {
@@ -89,11 +96,19 @@ export class OrderListComponent implements OnInit, AfterViewInit {
       startWith(''),
       map((value) => this._filterCountries(value || ''))
     );
+    this.route.queryParamMap.subscribe((params) => {
+      const created = params.get('created');
+      if (created) {
+        this.highlightedOrderNumber = created;
+        this.snackBar.open(`Order ${created} created successfully!`, 'OK', {
+          duration: 4000,
+        });
+        setTimeout(() => {
+          this.highlightedOrderNumber = null;
+        }, 4000);
+      }
+    });
     return this.loadOrders();
-  }
-
-  ngAfterViewInit() {
-    // No paginator logic needed for infinite scroll
   }
 
   onScroll(event: any) {
@@ -104,12 +119,15 @@ export class OrderListComponent implements OnInit, AfterViewInit {
       !this.allLoaded
     ) {
       this.pageIndex++;
-      this.loadOrders(true); // append
+      this.loadOrders(true);
     }
   }
 
   loadOrders(append = false) {
-    if (this.isLoading) return;
+    if (this.isLoading) {
+      return;
+    }
+
     this.isLoading = true;
     const offset = this.pageIndex * this.pageSize;
     this.orderService
