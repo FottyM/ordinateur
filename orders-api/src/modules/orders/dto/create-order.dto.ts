@@ -50,10 +50,26 @@ export class CreateOrderDto {
 
   @IsNotEmpty()
   @ValidateBy({
-    name: 'isFutureDate',
+    name: 'isFutureOrTodayDateUTC',
     validator: {
-      validate: (value: string) => new Date(value) > new Date(),
-      defaultMessage: () => 'Payment due date must be in the future',
+      validate: (value: string) => {
+        const now = new Date();
+        const input = new Date(value);
+        // Compare only the UTC date part
+        const nowUTC = Date.UTC(
+          now.getUTCFullYear(),
+          now.getUTCMonth(),
+          now.getUTCDate(),
+        );
+        const inputUTC = Date.UTC(
+          input.getUTCFullYear(),
+          input.getUTCMonth(),
+          input.getUTCDate(),
+        );
+        return inputUTC >= nowUTC;
+      },
+      defaultMessage: () =>
+        'Payment due date must be today or in the future (UTC)',
     },
   })
   paymentDueDate: string;
