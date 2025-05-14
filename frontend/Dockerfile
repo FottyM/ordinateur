@@ -1,21 +1,17 @@
-FROM node:18 AS base
+FROM node:22 AS base
 
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
-
 
 FROM base AS dev
 
 COPY . .
 CMD ["npm", "run", "start"]
 
-
-
 FROM base AS build
 COPY . .
 RUN npm run build -- --output-path=dist --configuration=production
-
 
 
 FROM nginx:stable-alpine AS prod

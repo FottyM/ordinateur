@@ -1,0 +1,22 @@
+.form-container {
+  max-width: 800px;
+  margin: 2rem auto;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.half {
+  flex: 1 1 48%;
+}
+
+.full {
+  flex: 1 1 100%;
+}
+
+mat-card {
+  padding: 2rem;
+}

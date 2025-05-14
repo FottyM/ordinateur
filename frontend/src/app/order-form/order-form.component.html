@@ -1,0 +1,189 @@
+<div class="form-container">
+  <mat-card>
+    <form [formGroup]="orderForm" (ngSubmit)="submit()">
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="half">
+          <mat-label>Order Number</mat-label>
+          <input matInput formControlName="orderNumber" />
+          <button
+            *ngIf="orderForm.get('orderNumber')?.value"
+            mat-icon-button
+            matSuffix
+            (click)="orderForm.get('orderNumber')?.setValue('')"
+            tabindex="-1"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="half">
+          <mat-label>Payment Due Date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker"
+            formControlName="paymentDueDate"
+            [min]="today"
+            readonly
+          />
+          <mat-hint>Only today or future dates allowed</mat-hint>
+          <button
+            *ngIf="orderForm.get('paymentDueDate')?.value"
+            mat-icon-button
+            matSuffix
+            (click)="orderForm.get('paymentDueDate')?.setValue('')"
+            tabindex="-1"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error
+            *ngIf="orderForm.get('paymentDueDate')?.hasError('pastDate')"
+          >
+            Payment due date cannot be in the past.
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="half">
+          <mat-label>Amount (e.g. 1,999.99)</mat-label>
+          <input matInput formControlName="amount" />
+          <button
+            *ngIf="orderForm.get('amount')?.value"
+            mat-icon-button
+            matSuffix
+            (click)="orderForm.get('amount')?.setValue('')"
+            tabindex="-1"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="half">
+          <mat-label>Currency</mat-label>
+          <input
+            type="text"
+            matInput
+            [formControl]="currencyCtrl"
+            [matAutocomplete]="autoCurrency"
+          />
+          <button
+            *ngIf="currencyCtrl.value"
+            mat-icon-button
+            matSuffix
+            (click)="currencyCtrl.setValue('')"
+            tabindex="-1"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-autocomplete
+            #autoCurrency="matAutocomplete"
+            (optionSelected)="onCurrencySelected($event)"
+          >
+            <mat-option
+              *ngFor="let option of filteredCurrencies | async"
+              [value]="option.name"
+            >
+              {{ option.name }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="half">
+          <mat-label>Street Address</mat-label>
+          <input matInput formControlName="streetAddress" />
+          <button
+            *ngIf="orderForm.get('streetAddress')?.value"
+            mat-icon-button
+            matSuffix
+            (click)="orderForm.get('streetAddress')?.setValue('')"
+            tabindex="-1"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="half">
+          <mat-label>Town</mat-label>
+          <input matInput formControlName="town" />
+          <button
+            *ngIf="orderForm.get('town')?.value"
+            mat-icon-button
+            matSuffix
+            (click)="orderForm.get('town')?.setValue('')"
+            tabindex="-1"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="half">
+          <mat-label>Country</mat-label>
+          <input
+            type="text"
+            matInput
+            [formControl]="countryCtrl"
+            [matAutocomplete]="autoCountry"
+          />
+          <button
+            *ngIf="countryCtrl.value"
+            mat-icon-button
+            matSuffix
+            (click)="countryCtrl.setValue('')"
+            tabindex="-1"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-autocomplete
+            #autoCountry="matAutocomplete"
+            (optionSelected)="onCountrySelected($event)"
+          >
+            <mat-option
+              *ngFor="let option of filteredCountries | async"
+              [value]="option.name"
+            >
+              {{ option.name }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Payment Description</mat-label>
+          <textarea
+            matInput
+            formControlName="paymentDescription"
+            rows="3"
+          ></textarea>
+          <button
+            *ngIf="orderForm.get('paymentDescription')?.value"
+            mat-icon-button
+            matSuffix
+            (click)="orderForm.get('paymentDescription')?.setValue('')"
+            tabindex="-1"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="orderForm.invalid"
+      >
+        Create Order
+      </button>
+    </form>
+  </mat-card>
+</div>
