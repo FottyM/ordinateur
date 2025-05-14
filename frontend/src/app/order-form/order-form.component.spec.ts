@@ -3,18 +3,13 @@ import {
   TestBed,
   fakeAsync,
   tick,
-  flush,
 } from '@angular/core/testing';
 
 import { OrderFormComponent } from './order-form.component';
 import { OrderService } from '../order.service';
 import { of } from 'rxjs';
 import { Router } from '@angular/router';
-import {
-  MatSnackBar,
-  MatSnackBarRef,
-  TextOnlySnackBar,
-} from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 describe('OrderFormComponent', () => {
   let component: OrderFormComponent;
@@ -25,7 +20,11 @@ describe('OrderFormComponent', () => {
 
   beforeEach(async () => {
     snackBarSpy = jasmine.createSpyObj('MatSnackBar', ['open']);
-    orderServiceSpy = jasmine.createSpyObj('OrderService', ['createOrder']);
+    orderServiceSpy = jasmine.createSpyObj('OrderService', [
+      'createOrder',
+      'existsOrderNumber',
+    ]);
+    orderServiceSpy.existsOrderNumber.and.returnValue(of(false));
     routerSpy = jasmine.createSpyObj('Router', ['navigate']);
     await TestBed.configureTestingModule({
       imports: [OrderFormComponent],
@@ -81,6 +80,8 @@ describe('OrderFormComponent', () => {
     orderServiceSpy.createOrder.and.returnValue(of({}));
     component.submit();
     tick();
-    expect(routerSpy.navigate).toHaveBeenCalledWith(['/list']);
+    expect(routerSpy.navigate).toHaveBeenCalledWith(['/list'], {
+      queryParams: { created: 'TST123' },
+    });
   }));
 });
