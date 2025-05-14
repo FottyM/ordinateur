@@ -20,6 +20,7 @@ import { FormControl } from '@angular/forms';
 import { Observable, startWith, map } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-order-list',
@@ -38,6 +39,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatPaginatorModule,
     MatFormFieldModule,
     MatAutocompleteModule,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './order-list.component.html',
   styleUrl: './order-list.component.css',
@@ -50,6 +52,7 @@ export class OrderListComponent implements OnInit, AfterViewInit {
     'paymentDueDate',
     'paymentDescription',
     'country',
+    'publicId',
   ];
   dataSource = new MatTableDataSource<Order>([]);
   countries = Object.entries(countries.getNames('en')).map(([code, name]) => ({
@@ -57,10 +60,11 @@ export class OrderListComponent implements OnInit, AfterViewInit {
     name,
   }));
   filters = { country: '', paymentDescription: '' };
-  pageSize = 5;
+  pageSize = 30;
   pageIndex = 0;
   totalOrders = 0;
-  debugInfo: any = {};
+  isLoading = false;
+  allLoaded = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -89,28 +93,25 @@ export class OrderListComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.paginator.page.subscribe((event) => {
-      if (this.pageSize !== event.pageSize) {
-        this.pageIndex = 0;
-      } else {
-        this.pageIndex = event.pageIndex;
-      }
-      this.pageSize = event.pageSize;
-      this.loadOrders();
-    });
+    // No paginator logic needed for infinite scroll
   }
 
-  loadOrders() {
+  onScroll(event: any) {
+    const element = event.target;
+    if (
+      element.scrollHeight - element.scrollTop <= element.clientHeight + 100 &&
+      !this.isLoading &&
+      !this.allLoaded
+    ) {
+      this.pageIndex++;
+      this.loadOrders(true); // append
+    }
+  }
+
+  loadOrders(append = false) {
+    if (this.isLoading) return;
+    this.isLoading = true;
     const offset = this.pageIndex * this.pageSize;
-    this.debugInfo = {
-      before: {
-        pageIndex: this.pageIndex,
-        pageSize: this.pageSize,
-        offset,
-        totalOrders: this.totalOrders,
-      },
-    };
     this.orderService
       .loadOrder({
         ...this.filters,
@@ -118,15 +119,16 @@ export class OrderListComponent implements OnInit, AfterViewInit {
         offset,
       })
       .subscribe((response) => {
-        this.dataSource.data = response.data;
+        if (append) {
+          this.dataSource.data = [...this.dataSource.data, ...response.data];
+        } else {
+          this.dataSource.data = response.data;
+        }
         this.totalOrders = response.total;
-        this.debugInfo.after = {
-          receivedDataLength: response.data.length,
-          total: response.total,
-          pageIndex: this.pageIndex,
-          pageSize: this.pageSize,
-          offset,
-        };
+        this.isLoading = false;
+        if (this.dataSource.data.length >= this.totalOrders) {
+          this.allLoaded = true;
+        }
       });
   }
 
@@ -137,6 +139,9 @@ export class OrderListComponent implements OnInit, AfterViewInit {
   }
 
   onFilterChange() {
+    this.pageIndex = 0;
+    this.allLoaded = false;
+    this.dataSource.data = [];
     this.filterChanged$.next();
   }
 
@@ -158,5 +163,12 @@ export class OrderListComponent implements OnInit, AfterViewInit {
   getCountryName(code: string): string {
     const found = this.countries.find((c) => c.code === code);
     return found ? found.name : code;
+  }
+
+  getTotalAmount(): number {
+    return this.dataSource.data.reduce(
+      (sum, order) => sum + (order.amount || 0),
+      0
+    );
   }
 }

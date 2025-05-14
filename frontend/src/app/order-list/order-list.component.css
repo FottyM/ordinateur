@@ -2,8 +2,10 @@
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-  width: 100%;
+  width: auto;
   margin-bottom: 1.5rem;
+  padding: 0 16px;
+  overflow: auto;
 }
 
 .filters > * {

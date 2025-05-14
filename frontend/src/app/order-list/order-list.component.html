@@ -57,30 +57,40 @@
     </mat-form-field>
   </div>
 
-  <div class="mat-elevation-z8">
-    <table mat-table [dataSource]="dataSource">
+  <div
+    class="mat-elevation-z8"
+    style="height: 80vh; overflow: auto; width: 100vw"
+    (scroll)="onScroll($event)"
+  >
+    <table mat-table [dataSource]="dataSource" style="min-width: 100vw">
       <!-- Order Number Column -->
       <ng-container matColumnDef="orderNumber">
         <th mat-header-cell *matHeaderCellDef>No.</th>
         <td mat-cell *matCellDef="let element">{{ element.orderNumber }}</td>
+        <td mat-footer-cell *matFooterCellDef></td>
       </ng-container>
 
       <!-- Amount Column -->
       <ng-container matColumnDef="amount">
         <th mat-header-cell *matHeaderCellDef>Amount</th>
         <td mat-cell *matCellDef="let element">{{ element.amount }}</td>
+        <td mat-footer-cell *matFooterCellDef>{{ getTotalAmount() }}</td>
       </ng-container>
 
       <!-- Currency Column -->
       <ng-container matColumnDef="currency">
         <th mat-header-cell *matHeaderCellDef>Currency</th>
         <td mat-cell *matCellDef="let element">{{ element.currency }}</td>
+        <td mat-footer-cell *matFooterCellDef></td>
       </ng-container>
 
       <!-- Payment Due Date Column -->
       <ng-container matColumnDef="paymentDueDate">
-        <th mat-header-cell *matHeaderCellDef>Due Date</th>
-        <td mat-cell *matCellDef="let element">{{ element.paymentDueDate }}</td>
+        <th mat-header-cell *matHeaderCellDef>Payment Due Date</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.paymentDueDate | date : "mediumDate" }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef></td>
       </ng-container>
 
       <!-- Payment Description Column -->
@@ -89,6 +99,7 @@
         <td mat-cell *matCellDef="let element">
           {{ element.paymentDescription }}
         </td>
+        <td mat-footer-cell *matFooterCellDef></td>
       </ng-container>
 
       <!-- Country Column -->
@@ -97,29 +108,28 @@
         <td mat-cell *matCellDef="let row">
           {{ getCountryName(row.country) }}
         </td>
+        <td mat-footer-cell *matFooterCellDef></td>
+      </ng-container>
+
+      <!-- Public ID Column -->
+      <ng-container matColumnDef="publicId">
+        <th mat-header-cell *matHeaderCellDef>Public ID</th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.publicId }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef></td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
     </table>
-
-    <mat-paginator
-      [length]="totalOrders"
-      [pageSize]="pageSize"
-      [pageIndex]="pageIndex"
-      [pageSizeOptions]="[5, 10, 20]"
-      showFirstLastButtons
-      aria-label="Select page of periodic orders"
+    <div
+      *ngIf="isLoading"
+      class="loading-spinner"
+      style="text-align: center; padding: 1em"
     >
-    </mat-paginator>
-    <pre
-      style="
-        background: #f8f8f8;
-        color: #c00;
-        font-size: 0.9em;
-        margin-top: 1em;
-      "
-      >{{ debugInfo | json }}</pre
-    >
+      <mat-spinner diameter="30"></mat-spinner>
+    </div>
   </div>
 </mat-card>
