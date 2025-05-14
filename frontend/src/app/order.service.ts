@@ -10,9 +10,7 @@ import { environment } from '../environments/environment';
 export class OrderService {
   private readonly apiUrl = `${environment.apiUrl}/orders`;
 
-  constructor(private http: HttpClient) {
-    console.log(this.apiUrl, 'Mon roi ');
-  }
+  constructor(private readonly http: HttpClient) {}
 
   loadOrder(filter: {
     paymentDescription?: string;
