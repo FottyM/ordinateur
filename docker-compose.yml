@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   postgres:
@@ -22,10 +22,12 @@ services:
     env_file:
       - .env
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - app-network
 
   orders-api:
     build:
@@ -53,6 +55,40 @@ services:
     restart: on-failure:5
     command: |
       sh -c "npm run migration:run & npm run start:dev"
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./frontend
+      target: dev
+    container_name: frontend
+    # !!Note: remove this if you're not using an arm cpu(M1, M2 etc...)
+    platform: linux/arm64
+    ports:
+      - "4300:4200"
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+      - ./frontend/package.json:/app/package.json
+      - ./frontend/package-lock.json:/app/package-lock.json
+      - ./frontend/angular.json:/app/angular.json
+      - ./frontend/tsconfig.json:/app/tsconfig.json
+      - ./frontend/tsconfig.app.json:/app/tsconfig.app.json
+      - ./frontend/tsconfig.spec.json:/app/tsconfig.spec.json
+      - ./frontend/.nvmrc:/app/.nvmrc
+      - ./frontend/proxy.conf.json:/app/proxy.conf.json
+    restart: on-failure:5
+    depends_on:
+      - orders-api
+    command: |
+      sh -c "npm run start -- --host '0.0.0.0' --proxy-config proxy.conf.json"
+    networks:
+      - app-network
 
 volumes:
   postgres_data:
+
+networks:
+  app-network:
+    driver: bridge
