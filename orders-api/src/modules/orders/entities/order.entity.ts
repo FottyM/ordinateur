@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -40,6 +41,15 @@ export class Order {
 
   @Column({ name: 'payment_due_date', type: 'timestamp with time zone' })
   paymentDueDate: Date;
+
+  @Column({
+    name: 'country_priority',
+    type: 'smallint',
+    generatedType: 'STORED',
+    asExpression: `CASE WHEN country = 'EE' THEN 0 ELSE 1`,
+  })
+  @Exclude({ toPlainOnly: true })
+  countryPriority: number;
 
   @CreateDateColumn({ name: 'create_at', type: 'timestamp with time zone' })
   createdAt: Date;

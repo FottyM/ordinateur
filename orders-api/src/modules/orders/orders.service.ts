@@ -38,12 +38,15 @@ export class OrdersService {
     }
 
     query
-      .orderBy(`CASE WHEN order.country = 'EE' THEN 0 ELSE 1 END`, 'ASC')
+      .orderBy('order.countryPriority', 'ASC')
       .addOrderBy('order.paymentDueDate', 'ASC')
       .take(filters.limit)
       .skip(filters.offset);
 
-    const [data, total] = await query.getManyAndCount();
+    const [data, total] = await Promise.all([
+      query.getMany(),
+      query.getCount(),
+    ]);
 
     return { total, data };
   }

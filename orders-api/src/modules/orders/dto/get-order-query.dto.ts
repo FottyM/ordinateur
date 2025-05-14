@@ -13,6 +13,7 @@ import { Transform, Type } from 'class-transformer';
 export class GetOrdersQueryDto {
   @IsOptional()
   @IsString()
+  @Transform(({ value }: { value?: string }) => value?.trim())
   paymentDescription: string;
 
   @IsOptional()
