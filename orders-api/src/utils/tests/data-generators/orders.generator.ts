@@ -10,7 +10,9 @@ export function generateOrder(data: Partial<Order> = {}): Order {
     country: faker.location.countryCode('alpha-2').toUpperCase(),
     currency: faker.finance.currencyCode().toUpperCase(),
     amount: faker.number.int({ min: 1, max: 10_000 }),
-    paymentDueDate: faker.date.soon().toISOString(),
+    paymentDueDate: faker.date
+      .soon({ days: faker.number.int({ min: 1, max: 365 }) })
+      .toISOString(),
     ...data,
   } as Order;
 }

@@ -22,6 +22,14 @@ export class OrdersService {
     return createOrder;
   }
 
+  async exists(orderNumber: string): Promise<boolean> {
+    const order = await this.orderRepository.findOne({
+      where: { orderNumber },
+      select: ['orderNumber'],
+    });
+    return !!order;
+  }
+
   async findAll(
     filters: GetOrdersQueryDto,
   ): Promise<{ total: number; data: Order[] }> {
