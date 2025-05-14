@@ -1,1 +1,19 @@
+<mat-toolbar>
+  <span>My Application</span>
+  <span style="flex: 1 1 auto"></span>
+  <button
+    *ngIf="isFormRoute"
+    mat-flat-button
+    color="primary"
+    routerLink="/list"
+  >
+    <mat-icon style="margin-right: 8px">list</mat-icon>
+    Order List
+  </button>
+  <button *ngIf="isListRoute" mat-flat-button color="accent" routerLink="/form">
+    <mat-icon style="margin-right: 8px">add</mat-icon>
+    Add Order
+  </button>
+</mat-toolbar>
+
 <router-outlet />
