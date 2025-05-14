@@ -99,7 +99,9 @@ export class OrderFormComponent implements OnInit {
         [
           Validators.required,
           (control: AbstractControl) => {
-            if (!control.value) return null;
+            if (!control.value) {
+              return null;
+            }
             const selected = new Date(control.value);
             const now = new Date();
             selected.setHours(0, 0, 0, 0);
@@ -184,7 +186,7 @@ export class OrderFormComponent implements OnInit {
       amount: Math.round(
         Number(formValue.amount.toString().replace(/,/g, '')) * 100
       ),
-      paymentDueDate: new Date(formValue.paymentDueDate).toISOString(),
+      paymentDueDate: this.toUtcMidnightIsoString(formValue.paymentDueDate),
     };
 
     this.orderService.createOrder(payload).subscribe({
@@ -193,7 +195,9 @@ export class OrderFormComponent implements OnInit {
           duration: 3000,
         });
         this.orderForm.reset();
-        this.router.navigate(['/list']);
+        this.router.navigate(['/list'], {
+          queryParams: { created: formValue.orderNumber },
+        });
       },
       error: (err) => {
         this.snackBar.open(
@@ -221,5 +225,12 @@ export class OrderFormComponent implements OnInit {
         )
       )
     );
+  }
+
+  private toUtcMidnightIsoString(date: string | Date): string {
+    const d = new Date(date);
+    return new Date(
+      Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())
+    ).toISOString();
   }
 }
