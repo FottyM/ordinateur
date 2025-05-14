@@ -14,6 +14,7 @@ export default defineConfig({
     globalSetup: ['test/globals/setup-pg-test-containers.ts'],
     setupFiles: ['ts-node/register/transpile-only'],
     hookTimeout: 1000 * 60 * 5,
+    reporters: ['verbose'],
   },
   plugins: [
     swc.vite({
