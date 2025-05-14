@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { Logger } from 'nestjs-pino';
+import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 
 import { AppModule } from './http-server/app.module';
 import { ConfigService } from '@nestjs/config';
@@ -13,7 +14,14 @@ async function bootstrap() {
 
   app.setGlobalPrefix('/api');
 
-  app.enableCors();
+  const corsOptions: CorsOptions = {
+    origin: ['http://localhost:4300'], // Placeholder: set correct domains for staging/prod
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+  };
+
+  app.enableCors(corsOptions);
 
   app.enableShutdownHooks();
 
