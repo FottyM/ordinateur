@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { Repository } from 'typeorm';
 import { Order } from './entities/order.entity';
-import { nanoid } from 'nanoid';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GetOrdersQueryDto } from './dto/get-order-query.dto';
+import { generatePublicId } from '@/utils/public-id-generator';
 
 @Injectable()
 export class OrdersService {
@@ -16,7 +16,7 @@ export class OrdersService {
   async create(createOrderDto: CreateOrderDto): Promise<Order> {
     const newOrder = this.orderRepository.create({
       ...createOrderDto,
-      publicId: nanoid(10),
+      publicId: generatePublicId(),
     });
     const createOrder = await this.orderRepository.save(newOrder);
     return createOrder;
