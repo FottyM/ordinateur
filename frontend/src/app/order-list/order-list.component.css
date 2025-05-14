@@ -1,0 +1,16 @@
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.filters > * {
+  flex: 1 1 200px;
+  min-width: 200px;
+}
+
+::ng-deep .mat-mdc-paginator-touch-target {
+  pointer-events: none !important;
+}
