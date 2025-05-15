@@ -185,7 +185,7 @@ export class OrderListComponent implements OnInit {
 
   getTotalAmount(): number {
     return this.dataSource.data.reduce(
-      (sum, order) => sum + (order.amount || 0),
+      (sum, order) => sum + (order.amount || 0) / 100,
       0
     );
   }
